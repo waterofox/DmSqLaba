@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SRC">
+      <UniqueIdentifier>{adb41b00-cb10-442c-a6ba-b1e9800e6aba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SYSTEM">
+      <UniqueIdentifier>{3c69d481-50b5-4ddd-8295-9df5913053ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TEXTURES">
+      <UniqueIdentifier>{f9e96248-fe5b-46ec-9932-dabb2174b6b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{8a752c7d-96c4-4ff6-9e96-ee861b40e580}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FONTS">
+      <UniqueIdentifier>{17db9627-80ea-419f-9d75-3ce31e01274f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Application.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\Event_Handler.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Label.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Input_Line.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\textures\plate.png">
+      <Filter>TEXTURES</Filter>
+    </Image>
+    <Image Include="resources\textures\interface_background.png">
+      <Filter>TEXTURES</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\system\Event_Handler.h">
+      <Filter>SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\enums.h">
+      <Filter>SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\Label.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\Input_Line.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resources\fonts\MonaspaceNeon-Medium.otf">
+      <Filter>FONTS</Filter>
+    </Font>
+  </ItemGroup>
+</Project>

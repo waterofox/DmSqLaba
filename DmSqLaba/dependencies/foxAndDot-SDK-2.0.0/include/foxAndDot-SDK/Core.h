@@ -1,0 +1,122 @@
+#pragma once
+
+//sfml 3.0.0 includes 
+#include "SFML/System.hpp"
+#include "SFML/Window.hpp"
+
+//std inlcludes
+#include <set>
+#include <vector>
+#include <variant>
+#include <queue>
+#include <functional>
+
+//sdk includes
+#include "Media_Manager.h"
+#include "Resource_Manager.h"
+
+#include "Tools/Scene.h"
+#include "Tools/Executable.h"
+#include "Tools/Collider.h"
+#include "Tools/Signal.h"
+#include "Tools/Slot.h"
+
+//Any other questions? a3shirnin@gmail.com
+
+class  Core
+{
+	//-------------------------------------------------------------------------------------------------------
+		sf::RenderWindow game_window;
+	//-------------------------------------------------------------------------------------------------------
+		sf::Time delta_time = sf::Time::Zero;
+		sf::Clock game_cycle_clock;
+
+		std::unordered_map<std::string,sf::View> views;
+	
+		Scene* actual_scene   = nullptr;
+		bool   changing_scene  = false;
+		Scene* scene_buffer   = nullptr;
+
+		std::queue<Executable*> emited_queue;
+	//-------------------------------------------------------------------------------------------------------
+		Executable* event_handler = nullptr;
+		void handle_slots();
+		void process_intersections_and_collisions();
+
+		void handle_collider(const Collider_Args_Package& args);
+
+
+		void update();
+		void render();
+	//-------------------------------------------------------------------------------------------------------
+public:
+
+	struct Changed_Scene_Package
+	{
+		Scene* new_scene = nullptr;
+		Scene* old_scene = nullptr;
+	};
+
+
+	Core();
+	virtual ~Core() = default;
+
+	Core(const Core&) = delete;
+	Core& operator=(const Core&) = delete;
+
+	//INTERFACE
+	//=================================================================================================================================
+	
+		static inline Slot<Collider_Args_Package, Core> handle_collider_slot; // Сollision handling slot
+
+		static inline Signal<Changed_Scene_Package> scene_had_changed;		  // Emited when new scene had loaded
+
+
+		static inline Resource_Manager resource_manager;	// Resource manager for managing fonts and textures
+
+		static inline Media_Manager    media_manager;		// Media manager for managing sounds and a music center
+
+
+		static inline Core* the_core;
+
+	//---------------------------------------------------------------------------------------------------------------------------------
+
+		void set_event_handler(Executable* handler);       // Change the object that handles events
+
+		void run(const unsigned int& window_width, \
+			const unsigned int& window_height, \
+			const std::string& window_title, \
+			const unsigned long& framerate_limit, \
+			const sf::State& state);					   // Start your game
+
+
+	//---------------------------------------------------------------------------------------------------------------------------------
+
+		sf::RenderWindow& get_window();
+
+		void change_scene(Scene* new_Scene); // Change actual scene by other scene
+		
+		Scene* get_actual_scene();			 // Get actual scene
+		
+		const sf::Time& get_delta_time();    // Get actual delta time (elapsed time since last frame)
+
+	//---------------------------------------------------------------------------------------------------------------------------------
+		
+		void      add_view(const std::string& view_name, const sf::View& view); // Add view
+	
+		void      remove_view(const std::string& view_name);					// Remove view
+		
+		sf::View* get_view(const std::string& view_name);					    // Get View
+
+	//---------------------------------------------------------------------------------------------------------------------------------
+
+		template<typename args_package>				
+		void emit(Signal<args_package>* signal)												// Emit connected signal
+		{
+			signal->core_queue = &(this->emited_queue);
+			(*signal)();
+		}
+
+	//=================================================================================================================================
+
+};
