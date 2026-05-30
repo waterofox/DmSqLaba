@@ -638,7 +638,6 @@ void Application::generate_chunk_by_side(const Sides& side)
 
     if (error) { return; }
 
-    roughness = Rf;
 
     the_core.resource_manager.get_texture(submain) = the_core.resource_manager.get_texture(main_t);
     sub_chunk.setPosition(chunk.getPosition());
@@ -657,6 +656,14 @@ void Application::generate_chunk_by_side(const Sides& side)
     animated_transition = true;
 
     chunk.setPosition(sf::Vector2f(current_x * chunk.getGlobalBounds().size.x, curretn_y * chunk.getGlobalBounds().size.y));
+
+    if (roughness != Rf)
+    {
+        std::filesystem::remove_all("saves");
+        std::filesystem::create_directory("saves");
+    }
+    
+    roughness = Rf;
 
     if (!load_chunk(current_x, curretn_y))
     {
@@ -692,7 +699,8 @@ Application::Application()
 
 void Application::run()
 {
-    //the_core.emit(&generate_signal);
+    std::filesystem::remove_all("saves\\");
+    std::filesystem::create_directory("saves");
     generate_chunk(0, 0, 0, 0);
 	the_core.run(645, 645, "DmSq by fAD-SDK 2.0.0", 480, sf::State::Windowed);
 }
