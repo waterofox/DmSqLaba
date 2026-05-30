@@ -1,6 +1,6 @@
 #include "Input_Line.h"
 #include "../Application.h"
-#define Gray sf::Color(127,127,127)
+#define Gray sf::Color(127,127,127,150)
 
 void Input_Line::update()
 {

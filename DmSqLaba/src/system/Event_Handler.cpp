@@ -7,6 +7,7 @@
 
 void Event_Handler::handle_keyboard(const sf::Keyboard::Scancode& key_code, const bool& arg)
 {
+
 	Application::key_status[key_code] = arg;
 	if (!arg)
 	{
@@ -40,6 +41,7 @@ void Event_Handler::handle_keyboard(const sf::Keyboard::Scancode& key_code, cons
 
 void Event_Handler::operator()()
 {
+
 	Application::is_click = false;
 	Application::recent_keyboard_input = '\0';
 
@@ -88,6 +90,8 @@ void Event_Handler::operator()()
 
 	if (Application::animated_transition)
 	{
+
+
 		sf::View& camera = *Application::the_core.get_view("main");
 		Entity& chunk = *static_cast<Entity*>((*Application::the_core.get_actual_scene())["chunk"]);
 		switch (Application::transition_destination)
@@ -143,5 +147,8 @@ void Event_Handler::operator()()
 		default:
 			break;
 		}
+
+		Group& i_g = *static_cast<Group*>((*Application::the_core.get_actual_scene())["group"]);
+		i_g.setPosition(Application::the_core.get_window().mapPixelToCoords(sf::Vector2i(0, 0)));
 	}
 }

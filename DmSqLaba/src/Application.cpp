@@ -11,95 +11,114 @@ void Application::init_resources()
     the_core.resource_manager.add_texture("resources\\textures\\interface_background.png", 1);
 
     the_core.resource_manager.add_font("resources\\fonts\\MonaspaceNeon-Medium.otf", 0);
-    //the_core.resource_manager.get_font(0).setSmooth(false);
 }
 
 void Application::init_interface()
 {
-    /*
-    lazy_otline = Entity(sf::Vector2i(204, 104), 1);
-    lazy_otline.set_name("0");
-    lazy_otline.set_colliding(false);
-    lazy_otline.set_updatable(false);
-    lazy_otline.setPosition(sf::Vector2f(645 - 204, 645 - 104));
-    lazy_otline.setColor(sf::Color::Black);
+    interface_group.set_name("group");
 
-    app_scene.add(&lazy_otline, 1);
+    interface_body.setOutlineColor(sf::Color::Black);
+    interface_body.setOutlineThickness(3);
+    interface_body.setFillColor(sf::Color(255, 255, 255, 120));
+    interface_body.setSize(sf::Vector2f(225, 120));
+    interface_body.set_name("body");
 
+    interface_group.add(&interface_body, sf::Vector2f(645 - 228, 645 - 322-60));
     
-    interface_back = Entity(sf::Vector2i(200, 100), 1);
-    interface_back.set_name("1");
-    interface_back.set_colliding(false);
-    interface_back.set_updatable(false);
-    interface_back.setPosition(sf::Vector2f(645-202, 645-102));
+//-----------------------------------------------------------------
+    A_l.set_name("A_l");
+    A_l.text->setString("A");
+    A_l.text->setFillColor(sf::Color::White);
+    A_l.text->setCharacterSize(256);
+    A_l.text->setScale(sf::Vector2f(0.2, 0.2));
 
-    app_scene.add(&interface_back, 1);
+    interface_group.add(A_l.text, sf::Vector2f(10, 0));
 
-    A_input.body.setSize(sf::Vector2f(80, 20));
-    A_input.set_name("A_input");
-    A_input.body.setPosition(interface_back.getPosition());
-    A_input.body.move(sf::Vector2f(30, 10));
-    A_input.set_text("-80");
-    app_scene.add(&A_input, 2);
+    B_l.set_name("B_l");
+    B_l.text->setString("B");
+    B_l.text->setFillColor(sf::Color::White);
+    B_l.text->setCharacterSize(256);
+    B_l.text->setScale(sf::Vector2f(0.2, 0.2));
 
-    B_input.body.setSize(sf::Vector2f(80, 20));
-    B_input.set_name("B_input");
-    B_input.body.setPosition(interface_back.getPosition());
-    B_input.body.move(sf::Vector2f(110, 10));
-    B_input.set_text("-80");
-    app_scene.add(&B_input, 2);
+    interface_group.add(B_l.text, sf::Vector2f(645 - 40, 0));
 
-    D_input.body.setSize(sf::Vector2f(80, 20));
-    D_input.set_name("D_input");
-    D_input.body.setPosition(interface_back.getPosition());
-    D_input.body.move(sf::Vector2f(30, 40));
-    D_input.set_text("-80");
-    app_scene.add(&D_input, 2);
+    D_l.set_name("D_l");
+    D_l.text->setString("D");
+    D_l.text->setFillColor(sf::Color::White);
+    D_l.text->setCharacterSize(256);
+    D_l.text->setScale(sf::Vector2f(0.2, 0.2));
 
-    C_input.body.setSize(sf::Vector2f(80, 20));
-    C_input.set_name("C_input");
-    C_input.body.setPosition(interface_back.getPosition());
-    C_input.body.move(sf::Vector2f(110, 40));
-    C_input.set_text("-80");
-    app_scene.add(&C_input, 2);
+    interface_group.add(D_l.text, sf::Vector2f(10, 645 - 60));
 
-    r_factor_input.body.setSize(sf::Vector2f(80, 20));
-    r_factor_input.set_name("r_input");
-    r_factor_input.body.setPosition(interface_back.getPosition());
-    r_factor_input.body.move(sf::Vector2f(30, 70));
-    r_factor_input.set_text("0.6");
-    app_scene.add(&r_factor_input, 2);
+    C_l.set_name("C_l");
+    C_l.text->setString("C");
+    C_l.text->setFillColor(sf::Color::White);
+    C_l.text->setCharacterSize(256);
+    C_l.text->setScale(sf::Vector2f(0.2, 0.2));
 
-    A_B_l.text->setString("AB");
-    A_B_l.set_resource(0);
-    A_B_l.text->setCharacterSize(72);
-    A_B_l.text->setScale(sf::Vector2f(0.2, 0.2));
-    A_B_l.text->setPosition(A_input.body.getPosition());
-    A_B_l.text->move(sf::Vector2f(-25, 0));
-    A_B_l.set_name("A-B_l");
-    A_B_l.text->setFillColor(sf::Color::Black);
-    app_scene.add(&A_B_l, 2);
+    interface_group.add(C_l.text, sf::Vector2f(645 - 40, 645-60));
+//-----------------------------------------------------------------
+    sf::Vector2f in_anc = sf::Vector2f(645 - 228 + 45, 645 - 322 - 60 + 10);
 
-    C_D_l.text->setString("DC");
-    C_D_l.set_resource(0);
-    C_D_l.text->setCharacterSize(72);
-    C_D_l.text->setScale(sf::Vector2f(0.2, 0.2));
-    C_D_l.text->setPosition(D_input.body.getPosition());
-    C_D_l.text->move(sf::Vector2f(-25, 0));
-    C_D_l.set_name("C-D_l");
-    C_D_l.text->setFillColor(sf::Color::Black);
-    app_scene.add(&C_D_l, 2);
+    A.set_name("A");
+    A.body.setSize(sf::Vector2f(80, 20));
+    interface_group.add(&A.body, in_anc);
 
-    r_l.text->setString("R");
-    r_l.set_resource(0);
-    r_l.text->setCharacterSize(72);
-    r_l.text->setScale(sf::Vector2f(0.2, 0.2));
-    r_l.text->setPosition(r_factor_input.body.getPosition());
-    r_l.text->move(sf::Vector2f(-25, 0));
-    r_l.set_name("r_l");
-    r_l.text->setFillColor(sf::Color::Black);
-    app_scene.add(&r_l, 2);
-    */
+    B.set_name("B");
+    B.body.setSize(sf::Vector2f(80, 20));
+    interface_group.add(&B.body, sf::Vector2f(in_anc.x+90,in_anc.y));
+
+    C.set_name("C");
+    C.body.setSize(sf::Vector2f(80, 20));
+    interface_group.add(&C.body, sf::Vector2f(in_anc.x + 90, in_anc.y + 30));
+
+    D.set_name("D");
+    D.body.setSize(sf::Vector2f(80, 20));
+    interface_group.add(&D.body, sf::Vector2f(in_anc.x, in_anc.y + 30));
+
+    R.set_name("R");
+    R.body.setSize(sf::Vector2f(80, 20));
+    interface_group.add(&R.body, sf::Vector2f(in_anc.x, in_anc.y + 60));
+//-----------------------------------------------------------------
+    AB.set_name("AB");
+    AB.text->setString("AB");
+    AB.text->setFillColor(sf::Color::Black);
+    AB.text->setCharacterSize(256);
+    AB.text->setScale(sf::Vector2f(0.08,0.08));
+
+    interface_group.add(AB.text, sf::Vector2f(in_anc.x - 40, in_anc.y));
+
+    DC.set_name("DC");
+    DC.text->setString("DC");
+    DC.text->setFillColor(sf::Color::Black);
+    DC.text->setCharacterSize(256);
+    DC.text->setScale(sf::Vector2f(0.08, 0.08));
+
+    interface_group.add(DC.text, sf::Vector2f(in_anc.x - 40, in_anc.y+30));
+
+    R_l.set_name("R_l");
+    R_l.text->setString("R");
+    R_l.text->setFillColor(sf::Color::Black);
+    R_l.text->setCharacterSize(256);
+    R_l.text->setScale(sf::Vector2f(0.08, 0.08));
+
+    interface_group.add(R_l.text, sf::Vector2f(in_anc.x - 40, in_anc.y + 60));
+//-----------------------------------------------------------------
+
+    app_scene.add(&interface_group, 0);
+    app_scene.add(&interface_body, 1);
+    app_scene.add(&A_l, 1);
+    app_scene.add(&B_l, 1);
+    app_scene.add(&C_l, 1);
+    app_scene.add(&D_l, 1);
+    app_scene.add(&A, 2);
+    app_scene.add(&B, 2);
+    app_scene.add(&C, 2);
+    app_scene.add(&D, 2);
+    app_scene.add(&R, 2);
+    app_scene.add(&AB, 2);
+    app_scene.add(&DC, 2);
+    app_scene.add(&R_l, 2);
 }
 
 void Application::save_chunk(const int& x, const int& y)
@@ -170,6 +189,47 @@ bool Application::load_chunk(const int& x, const int& y)
     }
 
     return res;
+}
+
+bool Application::get_value(float& value , const std::string& str)
+{
+    if (str.size() == 0) { value = 0; return true; }
+    bool sign_flag = (str[0] == '-');
+    bool dot_flag = false;
+    for (int i = 0; i < str.size(); ++i)
+    {
+        if (sign_flag and str.size() == 1)
+        {
+            return false;
+        }
+
+        if (sign_flag and i == 0)
+        {
+            continue;
+        }
+
+        const char& sign = str[i];
+        if (sign == '.')
+        {
+            if (dot_flag) { return false; }
+            dot_flag = true;
+
+            if (i == 0 or (i == 1 and sign_flag))
+            {
+                return false;
+            }
+
+            continue;
+        }
+
+        if (!(int(sign) >= 48 and int(sign) <= 57))
+        {
+            return false;
+        }
+    }
+    value = std::stof(str);
+    return true;
+
 }
 
 float Application::get_random_value(float min, float max)

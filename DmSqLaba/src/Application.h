@@ -6,6 +6,8 @@
 #include "system/enums.h"
 
 #include "ui/Input_Line.h"
+#include "ui/Group.h"
+#include "ui/Adopted_RectangleShape.h"
 
 #include <random>
 #include <vector>
@@ -15,10 +17,16 @@
 
 class Application
 {
-	
+//----------------------------------------------------------------
 	Entity chunk;
 	Entity sub_chunk;
-
+//----------------------------------------------------------------
+	Group interface_group;
+	Input_Line A, B, C, D, R;
+	Label A_l, B_l, C_l, D_l, AB, DC, R_l;
+	Adopted_RectangleShape interface_body;
+//----------------------------------------------------------------
+	
 	//------------------------------------------------------------
 		Event_Handler event_handler;
 		void init_keys();
@@ -48,6 +56,9 @@ class Application
 		void generate_chunk(const float& A, const float& B, const float& C, const float& D);
 		void save_chunk(const int& x, const int& y);
 		bool load_chunk(const int& x, const int& y);
+	//-----------------------------------------------------------
+		bool get_value(float& value,const std::string& str);
+	//-----------------------------------------------------------
 
 public:
 	static inline Core the_core;

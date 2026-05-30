@@ -130,6 +130,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\system\Event_Handler.cpp" />
+    <ClCompile Include="src\ui\Adopted_RectangleShape.cpp" />
+    <ClCompile Include="src\ui\Group.cpp" />
     <ClCompile Include="src\ui\Input_Line.cpp" />
     <ClCompile Include="src\ui\Label.cpp" />
   </ItemGroup>
@@ -141,6 +143,8 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\system\enums.h" />
     <ClInclude Include="src\system\Event_Handler.h" />
+    <ClInclude Include="src\ui\Adopted_RectangleShape.h" />
+    <ClInclude Include="src\ui\Group.h" />
     <ClInclude Include="src\ui\Input_Line.h" />
     <ClInclude Include="src\ui\Label.h" />
   </ItemGroup>
