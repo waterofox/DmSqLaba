@@ -2,8 +2,12 @@
 
 void Application::init_resources()
 {
-	current_chunk_view.loadFromFile("resources\\textures\\plate.png");
-	the_core.resource_manager.add_texture("resources\\textures\\plate.png", 0);
+    chunk_view.loadFromFile("resources\\textures\\plate.png");
+    sub_chunk_view.loadFromFile("resources\\textures\\plate.png");
+
+	the_core.resource_manager.add_texture("resources\\textures\\plate.png", Textures::main_t);
+    the_core.resource_manager.add_texture("resources\\textures\\plate.png", submain);
+
     the_core.resource_manager.add_texture("resources\\textures\\interface_background.png", 1);
 
     the_core.resource_manager.add_font("resources\\fonts\\MonaspaceNeon-Medium.otf", 0);
@@ -12,7 +16,7 @@ void Application::init_resources()
 
 void Application::init_interface()
 {
-
+    /*
     lazy_otline = Entity(sf::Vector2i(204, 104), 1);
     lazy_otline.set_name("0");
     lazy_otline.set_colliding(false);
@@ -95,6 +99,7 @@ void Application::init_interface()
     r_l.set_name("r_l");
     r_l.text->setFillColor(sf::Color::Black);
     app_scene.add(&r_l, 2);
+    */
 }
 
 void Application::save_chunk(const int& x, const int& y)
@@ -143,13 +148,13 @@ bool Application::load_chunk(const int& x, const int& y)
 
             color_code = 127 + value;
             
-            if (color_code > 50)
+            if (color_code >= 127)
             {
-                current_chunk_view.setPixel(sf::Vector2u(x, y), sf::Color(color_code, color_code, color_code));
+                chunk_view.setPixel(sf::Vector2u(x, y), sf::Color(0, color_code, 0));
             }
             else
             {
-                current_chunk_view.setPixel(sf::Vector2u(x, y), sf::Color(0, 0, color_code * 4));
+                chunk_view.setPixel(sf::Vector2u(x, y), sf::Color(0, 0, color_code));
             }
 
             current_mesh[y][x] = value;
@@ -161,7 +166,7 @@ bool Application::load_chunk(const int& x, const int& y)
             }
         }
 
-        the_core.resource_manager.get_texture(0).loadFromImage(current_chunk_view);
+        the_core.resource_manager.get_texture(0).loadFromImage(chunk_view);
     }
 
     return res;
@@ -176,7 +181,7 @@ float Application::get_random_value(float min, float max)
 
 void Application::generate_chunk(const float& A, const float& B, const float& C, const float& D)
 {
-    current_chunk_view.loadFromFile("resources\\textures\\plate.png");
+    chunk_view.loadFromFile("resources\\textures\\plate.png");
 
     for (int i = 0; i < CHUNK_SIZE; ++i)
     {
@@ -486,35 +491,57 @@ void Application::generate_chunk(const float& A, const float& B, const float& C,
         for (int j = 0; j < CHUNK_SIZE; ++j)
         {
             color_code = 127 + current_mesh[i][j];
-            if (color_code > 50)
+            if (color_code >= 127)
             {
-                current_chunk_view.setPixel(sf::Vector2u(j, i), sf::Color(color_code, color_code, color_code));
+                chunk_view.setPixel(sf::Vector2u(j, i), sf::Color(0, color_code, 0));
             }
             else
             {
-                current_chunk_view.setPixel(sf::Vector2u(j, i), sf::Color(0, 0, color_code * 4));
+                chunk_view.setPixel(sf::Vector2u(j, i), sf::Color(0, 0, color_code));
             }
         }
     }
 
-    the_core.resource_manager.get_texture(0).loadFromImage(current_chunk_view);
+    the_core.resource_manager.get_texture(Textures:: main_t).loadFromImage(chunk_view);
 }
 
 void Application::init_chunk()
 {
-	chunk = Entity(sf::Vector2i(CHUNK_SIZE, CHUNK_SIZE), 0);
+	chunk = Entity(sf::Vector2i(CHUNK_SIZE, CHUNK_SIZE), main_t);
 	chunk.setScale(sf::Vector2f(645/CHUNK_SIZE, 645/CHUNK_SIZE));
 
 	chunk.set_name("chunk");
 	chunk.set_colliding(false);
 	chunk.set_updatable(false);
+
+    sub_chunk = Entity(sf::Vector2i(CHUNK_SIZE, CHUNK_SIZE), submain);
+    sub_chunk.setScale(sf::Vector2f(645 / CHUNK_SIZE, 645 / CHUNK_SIZE));
+    sub_chunk.set_name("subchunk");
+    sub_chunk.set_colliding(false);
+    sub_chunk.set_updatable(false);
+  
 	
 	app_scene.add(&chunk, 0);
+    app_scene.add(&sub_chunk, 0);
+
+}
+
+void Application::init_keys()
+{
+    key_status[sf::Keyboard::Scancode::W] = false;
+    key_status[sf::Keyboard::Scancode::A] = false;
+    key_status[sf::Keyboard::Scancode::S] = false;
+    key_status[sf::Keyboard::Scancode::D] = false;
+
+    key_status[sf::Keyboard::Scancode::Backspace] = false;
 }
 
 void Application::generate_chunk_by_side(const Sides& side)
 {
     save_chunk(current_x, curretn_y);
+
+    the_core.resource_manager.get_texture(submain) = the_core.resource_manager.get_texture(main_t);
+    sub_chunk.setPosition(chunk.getPosition());
 
     int x_back_up = current_x;
     int y_back_up = curretn_y;
@@ -528,60 +555,15 @@ void Application::generate_chunk_by_side(const Sides& side)
     default:
         break;
     }
+    transition_destination = side;
+    animated_transition = true;
+
+    chunk.setPosition(sf::Vector2f(current_x * chunk.getGlobalBounds().size.x, curretn_y * chunk.getGlobalBounds().size.y));
+
     if (!load_chunk(current_x, curretn_y))
     {
-        float A = std::stof(A_input.get_text());
-        float B = std::stof(B_input.get_text());
-        float C = std::stof(C_input.get_text());
-        float D = std::stof(D_input.get_text());
-
-        roughness = std::stof(r_factor_input.get_text());
-
-        bool error_flag = false;
-
-        if (A < -127 or A > 127)
-        {
-            error_flag = true;
-            A_input.body.setFillColor(sf::Color(240, 128, 128));
-        }
-        if (B < -127 or B > 127)
-        {
-            error_flag = true;
-            B_input.body.setFillColor(sf::Color(240, 128, 128));
-        }
-        if (C < -127 or C > 127)
-        {
-            error_flag = true;
-            C_input.body.setFillColor(sf::Color(240, 128, 128));
-        }
-        if (D < -127 or D > 127)
-        {
-            error_flag = true;
-            D_input.body.setFillColor(sf::Color(240, 128, 128));
-        }
-        if (roughness < 0 or roughness > 1)
-        {
-            error_flag = true;
-            r_factor_input.body.setFillColor(sf::Color(240, 128, 128));
-        }
-       
-        if (error_flag) 
-        {
-            current_x = x_back_up;
-            curretn_y = y_back_up;
-            return; 
-        }
-
-
-        
-
-        generate_chunk(A, B, C, D);
+        generate_chunk(0,0,0,0);
     }
-    else
-    {
-
-    }
-    pre_side = side;
 }
 	
 
@@ -612,6 +594,7 @@ Application::Application()
 
 void Application::run()
 {
-    the_core.emit(&generate_signal);
-	the_core.run(645, 645, "DmSq by fAD-SDK 2.0.0", 60, sf::State::Windowed);
+    //the_core.emit(&generate_signal);
+    generate_chunk(0, 0, 0, 0);
+	the_core.run(645, 645, "DmSq by fAD-SDK 2.0.0", 480, sf::State::Windowed);
 }

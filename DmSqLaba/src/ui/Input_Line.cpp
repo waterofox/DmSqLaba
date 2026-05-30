@@ -34,7 +34,7 @@ void Input_Line::update()
 		{
 			label.text->setString(label.text->getString() + Application::recent_keyboard_input);
 		}
-		else if (Application::is_backspace)
+		else if (Application::key_status[sf::Keyboard::Scancode::Backspace])
 		{
 			if (label.text->getString().getSize() != 0)
 			{

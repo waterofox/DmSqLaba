@@ -28,7 +28,9 @@
     <ClCompile Include="src\ui\Label.cpp">
       <Filter>SRC</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\Input_Line.cpp" />
+    <ClCompile Include="src\ui\Input_Line.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\plate.png">
@@ -49,7 +51,9 @@
     <ClInclude Include="src\ui\Label.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\Input_Line.h" />
+    <ClInclude Include="src\ui\Input_Line.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\fonts\MonaspaceNeon-Medium.otf">
