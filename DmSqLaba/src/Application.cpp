@@ -61,22 +61,27 @@ void Application::init_interface()
     sf::Vector2f in_anc = sf::Vector2f(645 - 228 + 45, 645 - 322 - 60 + 10);
 
     A.set_name("A");
+    A.set_text("0");
     A.body.setSize(sf::Vector2f(80, 20));
     interface_group.add(&A.body, in_anc);
 
     B.set_name("B");
+    B.set_text("0");
     B.body.setSize(sf::Vector2f(80, 20));
     interface_group.add(&B.body, sf::Vector2f(in_anc.x+90,in_anc.y));
 
     C.set_name("C");
+    C.set_text("0");
     C.body.setSize(sf::Vector2f(80, 20));
     interface_group.add(&C.body, sf::Vector2f(in_anc.x + 90, in_anc.y + 30));
 
     D.set_name("D");
+    D.set_text("0");
     D.body.setSize(sf::Vector2f(80, 20));
     interface_group.add(&D.body, sf::Vector2f(in_anc.x, in_anc.y + 30));
 
     R.set_name("R");
+    R.set_text("0.5");
     R.body.setSize(sf::Vector2f(80, 20));
     interface_group.add(&R.body, sf::Vector2f(in_anc.x, in_anc.y + 60));
 //-----------------------------------------------------------------
@@ -485,7 +490,7 @@ void Application::generate_chunk(const float& A, const float& B, const float& C,
                     {
                         sum += current_mesh[y - half][x];
                     }
-                    count++;
+                    ++count;
                 }
 
                 if (y + half < CHUNK_SIZE)
@@ -498,7 +503,7 @@ void Application::generate_chunk(const float& A, const float& B, const float& C,
                     {
                         sum += current_mesh[y + half][x];
                     }
-                    count++;
+                    ++count;
                 }
 
                 if (x - half >= 0)
@@ -511,7 +516,7 @@ void Application::generate_chunk(const float& A, const float& B, const float& C,
                     {
                         sum += current_mesh[y][x - half];
                     }
-                    count++;
+                    ++count;
                 }
 
                 if (x + half < CHUNK_SIZE)
@@ -524,7 +529,7 @@ void Application::generate_chunk(const float& A, const float& B, const float& C,
                     {
                         sum += current_mesh[y][x + half];
                     }
-                    count++;
+                    ++count;
                 }
 
                 if (count > 0)
@@ -599,12 +604,44 @@ void Application::init_keys()
 void Application::generate_chunk_by_side(const Sides& side)
 {
     save_chunk(current_x, curretn_y);
+    
+    bool error = false;
+
+    float Af, Bf, Cf, Df, Rf;
+
+    if (!get_value(Af, A.get_text()) or !(Af >= -127 and Af <= 127))
+    {
+        A.body.setFillColor(sf::Color(240, 128, 128));
+        error = true;
+    }
+    if (!get_value(Bf, B.get_text()) or !(Bf >= -127 and Bf <= 127))
+    {
+        B.body.setFillColor(sf::Color(240, 128, 128));
+        error = true;
+
+    }
+    if (!get_value(Cf, C.get_text()) or !(Cf >= -127 and Cf <= 127))
+    {
+        C.body.setFillColor(sf::Color(240, 128, 128));
+        error = true;
+    }
+    if (!get_value(Df, D.get_text()) or !(Df >= -127 and Df <= 127))
+    {
+        D.body.setFillColor(sf::Color(240, 128, 128));
+        error = true;
+    }
+    if (!get_value(Rf, R.get_text()) or !(Rf >= 0 and Rf <= 1))
+    {
+        R.body.setFillColor(sf::Color(240, 128, 128));
+        error = true;
+    }
+
+    if (error) { return; }
+
+    roughness = Rf;
 
     the_core.resource_manager.get_texture(submain) = the_core.resource_manager.get_texture(main_t);
     sub_chunk.setPosition(chunk.getPosition());
-
-    int x_back_up = current_x;
-    int y_back_up = curretn_y;
 
     switch (side)
     {
@@ -615,6 +652,7 @@ void Application::generate_chunk_by_side(const Sides& side)
     default:
         break;
     }
+
     transition_destination = side;
     animated_transition = true;
 
@@ -622,7 +660,7 @@ void Application::generate_chunk_by_side(const Sides& side)
 
     if (!load_chunk(current_x, curretn_y))
     {
-        generate_chunk(0,0,0,0);
+        generate_chunk(Af,Bf,Cf,Df);
     }
 }
 	
